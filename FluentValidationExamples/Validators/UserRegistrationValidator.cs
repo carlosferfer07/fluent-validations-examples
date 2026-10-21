@@ -38,6 +38,7 @@ namespace FluentValidationExamples.Validators
             When(u => u.WantsNewsletter, () =>
             {
                 RuleFor(u => u.NewsletterFrequency)
+                    .Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .Must(f => Frequencies.Contains(f!.ToLower()))
                     .WithMessage("Frequency must be one of: daily, weekly, monthly.");
