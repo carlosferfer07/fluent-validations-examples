@@ -1,3 +1,4 @@
+using FluentValidation;
 using FluentValidationExamples.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,12 @@ namespace FluentValidationExamples.Controllers
         };
 
         private readonly ILogger<BookController> _logger;
+        private readonly IValidator<Book> _validator;
 
-        public BookController(ILogger<BookController> logger)
+        public BookController(ILogger<BookController> logger, IValidator<Book> validator)
         {
             _logger = logger;
+            _validator = validator;
         }
 
         [HttpGet(Name = "Book")]
@@ -32,14 +35,26 @@ namespace FluentValidationExamples.Controllers
         }
 
         [HttpPost(Name = "Book")]
-        public Book Create(Book book)
+        public async Task<ActionResult<Book>> Create(Book book)
         {
+            var result = await _validator.ValidateAsync(book);
+            if (!result.IsValid)
+            {
+                return ValidationProblem(new ValidationProblemDetails(result.ToDictionary()));
+            }
+
             return book;
         }
 
         [HttpPut(Name = "Book")]
-        public Book Update(Book book)
+        public async Task<ActionResult<Book>> Update(Book book)
         {
+            var result = await _validator.ValidateAsync(book);
+            if (!result.IsValid)
+            {
+                return ValidationProblem(new ValidationProblemDetails(result.ToDictionary()));
+            }
+
             return book;
         }
         
