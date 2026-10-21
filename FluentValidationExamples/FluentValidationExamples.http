@@ -1,6 +1,70 @@
 @FluentValidationExamples_HostAddress = http://localhost:5071
 
-GET {{FluentValidationExamples_HostAddress}}/weatherforecast/
+GET {{FluentValidationExamples_HostAddress}}/book/
 Accept: application/json
+
+###
+
+# Invalid book: missing name and too many pages
+POST {{FluentValidationExamples_HostAddress}}/book/
+Content-Type: application/json
+
+{
+  "name": "",
+  "pages": 9000,
+  "publicationDate": "2024-05-01"
+}
+
+###
+
+# Invalid registration: taken username, weak password, underage, missing newsletter frequency
+POST {{FluentValidationExamples_HostAddress}}/user/register
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "email": "not-an-email",
+  "password": "weak",
+  "confirmPassword": "other",
+  "birthDate": "2015-01-01",
+  "wantsNewsletter": true
+}
+
+###
+
+# Valid registration
+POST {{FluentValidationExamples_HostAddress}}/user/register
+Content-Type: application/json
+
+{
+  "username": "maria_99",
+  "email": "maria@mail.com",
+  "password": "Str0ngPass",
+  "confirmPassword": "Str0ngPass",
+  "birthDate": "1990-05-10",
+  "wantsNewsletter": true,
+  "newsletterFrequency": "weekly"
+}
+
+###
+
+# Invalid order: bad postal code, bad product code, duplicated product
+POST {{FluentValidationExamples_HostAddress}}/order/
+Content-Type: application/json
+
+{
+  "customerEmail": "john@mail.com",
+  "shippingAddress": {
+    "street": "Rua Augusta 10",
+    "city": "Lisboa",
+    "postalCode": "1100",
+    "country": "PT"
+  },
+  "items": [
+    { "productCode": "abc", "quantity": 0, "unitPrice": 5 },
+    { "productCode": "abc", "quantity": 1, "unitPrice": 5 }
+  ],
+  "discountCode": "PROMO10"
+}
 
 ###
