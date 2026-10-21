@@ -14,7 +14,7 @@ namespace FluentValidationExamples.Validators
             // Portuguese postal codes look like 1000-001
             RuleFor(a => a.PostalCode)
                 .NotEmpty()
-                .Matches(@"^\d{4}-\d{3}$").When(a => a.Country == "PT")
+                .Matches(@"^\d{4}-\d{3}$").When(a => a.Country == "PT", ApplyConditionTo.CurrentValidator)
                 .WithMessage("Portuguese postal codes must look like 1234-567.");
         }
     }
